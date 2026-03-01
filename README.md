@@ -1,40 +1,3 @@
-# 📅 Event Reminder Application
-
-**User + Admin + AI-Assisted Academic Calendar System**
-
----
-
-## 📌 Primary Objective of This Document
-
-This `README.md` is a **high‑fidelity functional and architectural specification**.
-
-It is intentionally written with **extra depth and precision** so that:
-
-* 🤖 An **AI system** can use this document as full context to generate:
-
-  * Frontend UI
-  * PHP backend logic
-  * SQL schema and queries
-* 🎓 Interviewers can clearly evaluate:
-
-  * System design thinking
-  * Separation of concerns
-  * Scalability awareness
-* 🧑‍💻 A developer can implement the system **without additional clarification**
-
-⚠️ **Out of Scope (Intentionally Excluded)**
-
-* CRON / Task Scheduler / Python worker implementation
-* Background execution configuration
-
-This document focuses **only on**:
-
-* Frontend behavior & UI expectations
-* PHP backend responsibilities
-* Database design & relationships
-
----
-
 ## 📖 Project Overview
 
 The **Event Reminder Application** is a role‑based PHP web application that allows users to create time‑bound events and receive automated reminders, while giving administrators full control over **global events** and **AI‑generated academic calendar events**.
@@ -42,6 +5,10 @@ The **Event Reminder Application** is a role‑based PHP web application that al
 A distinguishing feature of this project is the **admin‑controlled AI pipeline**, where academic calendars (PDFs) are uploaded, parsed, and converted into structured events — **only after explicit admin approval**.
 
 The application is designed to run on **localhost (XAMPP)** initially, but follows patterns that make it **production‑ready**.
+
+Admin login details :- 
+email :- admin1@example.com
+password :- adminpassword
 
 ---
 
