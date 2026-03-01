@@ -9,9 +9,12 @@ import os
 import json
 import re
 import tempfile
+import subprocess
+from contextlib import asynccontextmanager
 
 import fitz  # PyMuPDF
 import google.generativeai as genai
+from apscheduler.schedulers.background import BackgroundScheduler
 from dotenv import load_dotenv
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
@@ -25,7 +28,47 @@ if not GEMINI_API_KEY:
 
 genai.configure(api_key=GEMINI_API_KEY)
 
-app = FastAPI(title="Event Extractor API", version="1.0.0")
+def run_php_reminders():
+    """Execute the PHP reminder script via the CLI."""
+    print("⏰ [Background Task] Running automated reminders...")
+    try:
+        # Resolve the path to send_reminders.php relative to this script
+        # This assumes python_api/ is a subfolder of the project root
+        project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        script_path = os.path.join(project_root, "send_reminders.php")
+        
+        if not os.path.exists(script_path):
+            print(f"❌ Error: Could not find {script_path}")
+            return
+
+        # Attempt to run with 'php' from PATH
+        result = subprocess.run(["php", script_path], capture_output=True, text=True)
+        
+        if result.returncode == 0:
+            print(f"✅ Reminders output: {result.stdout.strip()}")
+        else:
+            print(f"⚠️ PHP Error: {result.stderr.strip()}")
+
+    except Exception as e:
+        print(f"❌ Exception during reminder task: {e}")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Start the background scheduler on startup and shut it down on exit."""
+    scheduler = BackgroundScheduler()
+    # Schedule to run every 5 minutes
+    scheduler.add_job(run_php_reminders, 'interval', minutes=5)
+    scheduler.start()
+    print("🚀 Background scheduler started (Interval: 5m)")
+    yield
+    scheduler.shutdown()
+    print("🛑 Background scheduler shut down")
+
+app = FastAPI(
+    title="Event Extractor API", 
+    version="1.0.0",
+    lifespan=lifespan
+)
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
