@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $reminder2_date = date('Y-m-d H:i:s', $event_timestamp - 3600);   // 1 hour before
 
     $update_stmt = $conn->prepare("UPDATE events SET title = ?, description = ?, event_date = ?, reminder1_date = ?, reminder2_date = ?, reminder1_sent = ?, reminder2_sent = ? WHERE id = ? AND user_id = ?");
-    $update_stmt->bind_param("sssssiii", $title, $description, $event_date, $reminder1_date, $reminder2_date, $reminder1_sent, $reminder2_sent, $event_id, $user_id);
+    $update_stmt->bind_param("sssssiiii", $title, $description, $event_date, $reminder1_date, $reminder2_date, $reminder1_sent, $reminder2_sent, $event_id, $user_id);
 
     if ($update_stmt->execute()) {
         header('Location: dashboard.php?success=event_updated');

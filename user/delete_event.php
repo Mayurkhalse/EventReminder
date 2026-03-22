@@ -22,11 +22,8 @@ if (!$event_id) {
     die('Event ID is required.');
 }
 
-// Ensure the event is a past event before deleting
-$now = date('Y-m-d H:i:s');
-
-$stmt = $conn->prepare("DELETE FROM events WHERE id = ? AND user_id = ? AND event_date < ?");
-$stmt->bind_param("iis", $event_id, $user_id, $now);
+$stmt = $conn->prepare("DELETE FROM events WHERE id = ? AND user_id = ?");
+$stmt->bind_param("ii", $event_id, $user_id);
 
 if ($stmt->execute()) {
     if ($stmt->affected_rows > 0) {

@@ -49,6 +49,30 @@ $global_result = $global_stmt->get_result();
         </div>
 
         <div class="main-content">
+            <?php if (isset($_GET['success'])): ?>
+                <div style="background:#d4edda;border:1px solid #c3e6cb;color:#155724;padding:1rem 1.5rem;border-radius:8px;margin-bottom:1.5rem;">
+                    <?php 
+                        switch($_GET['success']) {
+                            case 'event_added': echo "✅ Event added successfully!"; break;
+                            case 'event_updated': echo "✅ Event updated successfully!"; break;
+                            case 'event_deleted': echo "✅ Event deleted successfully!"; break;
+                            default: echo "✅ Operation successful!";
+                        }
+                    ?>
+                </div>
+            <?php endif; ?>
+            
+            <?php if (isset($_GET['error'])): ?>
+                <div style="background:#f8d7da;border:1px solid #f5c6cb;color:#721c24;padding:1rem 1.5rem;border-radius:8px;margin-bottom:1.5rem;">
+                    <?php 
+                        switch($_GET['error']) {
+                            case 'delete_failed': echo "❌ Failed to delete the event."; break;
+                            default: echo "❌ An error occurred.";
+                        }
+                    ?>
+                </div>
+            <?php endif; ?>
+
             <a href="add_event.php" class="btn btn-primary" style="margin-bottom: 2rem;">Add New Event</a>
             
             <div class="tab-navigation">
@@ -70,6 +94,11 @@ $global_result = $global_stmt->get_result();
                                     <span><?php echo date('D, M j, Y, g:i A', strtotime($event['event_date'])); ?></span>
                                     <div class="event-actions">
                                         <a href="edit_event.php?id=<?php echo $event['id']; ?>">Edit</a>
+                                        <form action="delete_event.php" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this event?');">
+                                            <input type="hidden" name="event_id" value="<?php echo $event['id']; ?>">
+                                            <?php echo csrf_input(); ?>
+                                            <button type="submit" style="background:none;border:none;cursor:pointer;color:var(--error-color);font-weight:600;padding:0;margin-left: 10px;">Delete</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
