@@ -25,9 +25,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $reminder1_date = date('Y-m-d H:i:s', $event_timestamp - 86400); // 1 day before
     $reminder2_date = date('Y-m-d H:i:s', $event_timestamp - 3600);   // 1 hour before
 
+    // If reminder dates are in the past, mark them as already sent
+    $now_ts = time();
+    $r1_sent = (strtotime($reminder1_date) <= $now_ts) ? 1 : 0;
+    $r2_sent = (strtotime($reminder2_date) <= $now_ts) ? 1 : 0;
 
-    $stmt = $conn->prepare("INSERT INTO events (user_id, title, description, event_date, reminder1_date, reminder2_date) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("isssss", $user_id, $title, $description, $event_date, $reminder1_date, $reminder2_date);
+    $stmt = $conn->prepare("INSERT INTO events (user_id, title, description, event_date, reminder1_date, reminder2_date, reminder1_sent, reminder2_sent) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("isssssii", $user_id, $title, $description, $event_date, $reminder1_date, $reminder2_date, $r1_sent, $r2_sent);
 
     if ($stmt->execute()) {
         header('Location: dashboard.php?success=event_added');

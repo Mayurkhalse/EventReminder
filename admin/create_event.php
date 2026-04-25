@@ -23,10 +23,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $reminder1_date = date('Y-m-d H:i:s', $event_timestamp - 86400 * 2); // 2 days before for global events
     $reminder2_date = date('Y-m-d H:i:s', $event_timestamp - 86400);   // 1 day before
 
+    // If reminder dates are in the past, mark them as already sent
+    $now_ts = time();
+    $r1_sent = (strtotime($reminder1_date) <= $now_ts) ? 1 : 0;
+    $r2_sent = (strtotime($reminder2_date) <= $now_ts) ? 1 : 0;
+
     $is_global = true;
 
-    $stmt = $conn->prepare("INSERT INTO events (title, description, event_date, reminder1_date, reminder2_date, is_global) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssssi", $title, $description, $event_date, $reminder1_date, $reminder2_date, $is_global);
+    $stmt = $conn->prepare("INSERT INTO events (title, description, event_date, reminder1_date, reminder2_date, is_global, reminder1_sent, reminder2_sent) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssssiii", $title, $description, $event_date, $reminder1_date, $reminder2_date, $is_global, $r1_sent, $r2_sent);
 
     if ($stmt->execute()) {
         header('Location: dashboard.php?success=global_event_added');

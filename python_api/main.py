@@ -57,9 +57,9 @@ async def lifespan(app: FastAPI):
     """Start the background scheduler on startup and shut it down on exit."""
     scheduler = BackgroundScheduler()
     # Schedule to run every 5 minutes
-    scheduler.add_job(run_php_reminders, 'interval', minutes=5)
+    scheduler.add_job(run_php_reminders, 'interval', minutes=1)
     scheduler.start()
-    print("🚀 Background scheduler started (Interval: 5m)")
+    print("🚀 Background scheduler started (Interval: 1m)")
     yield
     scheduler.shutdown()
     print("🛑 Background scheduler shut down")

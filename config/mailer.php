@@ -11,10 +11,10 @@ function getMailer(): ?PHPMailer {
     $mail = new PHPMailer(true);
     try {
         $mail->isSMTP();
-        $mail->Host       = 'smtp.example.com';   // ← replace with your SMTP host
+        $mail->Host       = 'smtp.gmail.com';   // ← replace with your SMTP host
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'user@example.com';   // ← replace with your SMTP username
-        $mail->Password   = 'password';           // ← replace with your SMTP password
+        $mail->Username   = 'cinecode34@gmail.com';   // ← replace with your SMTP username
+        $mail->Password   = 'vwrnxemuwyuvntum';           // ← replace with your SMTP password
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
         $mail->setFrom('noreply@eventreminder.com', 'Event Reminder App');
